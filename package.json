@@ -1,0 +1,18 @@
+{
+  "name": "ecs-env",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./cli.js"
+  },
+  "bin": {
+    "ecs-env": "./cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "2.797.0"
+  }
+}
