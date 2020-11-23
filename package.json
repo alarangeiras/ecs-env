@@ -2,14 +2,19 @@
   "name": "ecs-env",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "start": "node ./cli.js"
   },
   "bin": {
     "ecs-env": "./cli.js"
   },
-  "keywords": [],
+  "keywords": [
+    "Spring Boot",
+    "ECS",
+    "AWS",
+    "Environment Variables"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
