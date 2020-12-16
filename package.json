@@ -5,11 +5,12 @@
   "main": "cli.js",
   "homepage": "https://github.com/alarangeiras/ecs-env",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/alarangeiras/ecs-env"
-  },  
+    "type": "git",
+    "url": "https://github.com/alarangeiras/ecs-env"
+  },
   "scripts": {
-    "start": "node ./cli.js"
+    "start": "node ./cli.js",
+    "build": "pkg cli.js --out-path build/"
   },
   "bin": {
     "ecs-env": "./cli.js"
@@ -23,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "2.797.0"
+    "aws-sdk": "2.797.0",
+    "pkg": "4.4.9"
   }
 }
