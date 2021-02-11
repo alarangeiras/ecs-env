@@ -65,7 +65,10 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"      
       - run: npm version patch
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}      
+          NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}
