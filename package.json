@@ -9,8 +9,9 @@
     "url": "https://github.com/alarangeiras/ecs-env"
   },
   "scripts": {
+    "clear": "rimraf build/",
     "start": "node ./cli.js",
-    "build": "pkg cli.js --out-path build/"
+    "build": "npm run clear && pkg cli.js -t node12-linux-x64,node12-macos-x64,node12-win-x64 -o build/ecs-env"
   },
   "bin": {
     "ecs-env": "./cli.js"
@@ -25,6 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "2.797.0",
-    "pkg": "4.4.9"
+    "pkg": "4.4.9",
+    "rimraf": "3.0.2"
   }
 }
