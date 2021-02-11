@@ -14,14 +14,19 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
+      - name: publish tag
+        id: publish_tag
+        run: |
+          git push --follow-tags
+          echo ::set-output name=tag_name::$(uuidgen)      
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ job.container.id }}
-          release_name: Release ${{ job.container.id }} of branch ${{ github.ref }}
+          tag_name: ${{ steps.publish_tag.outputs.tag_name }}
+          release_name: Release ${{ steps.publish_tag.outputs.tag_name }} of branch ${{ github.ref }}
           draft: false
           prerelease: false
       # - name: Upload Release Asset (Linux)
