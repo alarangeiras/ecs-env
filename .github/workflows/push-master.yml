@@ -2,7 +2,7 @@ name: push-master
 on:
   push:
     branches:
-     - master
+      - master
 
 jobs:
   build:
@@ -14,51 +14,12 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
-      - name: publish tag
-        id: publish_tag
-        run: |
-          git push --follow-tags
-          echo ::set-output name=tag_name::$(uuidgen)      
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Temporarily save artifacts
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ steps.publish_tag.outputs.tag_name }}
-          release_name: Release ${{ steps.publish_tag.outputs.tag_name }} of branch ${{ github.ref }}
-          draft: false
-          prerelease: false
-      # - name: Upload Release Asset (Linux)
-      #   id: upload-release-asset-linux
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./build
-      #     asset_name: ecs-env-linux
-      #     asset_content_type: application/octet-stream      
-      # - name: Upload Release Asset (MacOS)
-      #   id: upload-release-asset-macos 
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./build
-      #     asset_name: ecs-env-macos
-      #     asset_content_type: application/octet-stream      
-      # - name: Upload Release Asset (Windows)
-      #   id: upload-release-asset-windows 
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./build
-      #     asset_name: ecs-env-win.exe
-      #     asset_content_type: application/octet-stream  
+          name: artifacts
+          path: build/
+          retention-days: 1
 
   publish-npm:
     needs: build
@@ -72,8 +33,68 @@ jobs:
       - run: npm ci
       - run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
-          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"      
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
       - run: npm version patch
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}
+
+  generate-release:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - name: publish tag
+        id: publish_tag
+        run: |
+          git push --follow-tags
+          echo ::set-output name=tag_name::$(npm view ecs-env version)
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.publish_tag.outputs.tag_name }}
+          release_name: Release ${{ steps.publish_tag.outputs.tag_name }} of branch ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Retrieve artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: artifacts
+          path: build/
+      - name: Upload Release Asset (Linux)
+        id: upload-release-asset-linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build
+          asset_name: ecs-env-linux
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset (MacOS)
+        id: upload-release-asset-macos
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build
+          asset_name: ecs-env-macos
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset (Windows)
+        id: upload-release-asset-windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build
+          asset_name: ecs-env-win.exe
+          asset_content_type: application/octet-stream
