@@ -12,6 +12,6 @@ deploy:
   provider: releases
   api_key: $GITHUB_KEY
   file:
-    - ./build/ecs-env-linux
-    - ./build/ecs-env-macos
-    - ./build/ecs-env-win.exe
+    - build/ecs-env-linux
+    - build/ecs-env-macos
+    - build/ecs-env-win.exe
