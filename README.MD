@@ -4,6 +4,10 @@
 
 ecs-env is a script globally installed to help generate Spring Boot's application.properties from environment variables in task definitions Amazon ECS.
 
+## Continuous Integration
+
+[![Build Status](https://travis-ci.org/alarangeiras/ecs-env.svg?branch=master)](https://travis-ci.org/alarangeiras/ecs-env)
+
 ## INSTALL
 
 > npm i -g ecs-env
