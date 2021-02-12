@@ -6,7 +6,7 @@ ecs-env is a script globally installed to help generate Spring Boot's applicatio
 
 ## Continuous Integration
 
-![push-master](https://github.com/alarangeiras/ecs-env/workflows/release/badge.svg)
+![release](https://github.com/alarangeiras/ecs-env/workflows/release/badge.svg)
 
 ## INSTALL
 
