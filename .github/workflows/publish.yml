@@ -1,5 +1,7 @@
 name: publish
-on: release
+on: 
+  release:
+    type: [created]
 jobs:
   publish:
     runs-on: ubuntu-latest
