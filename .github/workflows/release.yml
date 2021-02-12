@@ -80,3 +80,35 @@ jobs:
           asset_path: ./build/ecs-env-win.exe
           asset_name: ecs-env-win.exe
           asset_content_type: application/octet-stream
+
+  npm-publish:
+      needs: generate-release
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v1
+          with:
+            node-version: 12
+            registry-url: https://registry.npmjs.org/
+        - name: Config git
+          run: |
+            git config --global user.name "Github Actions"
+            git config --global user.email github@local
+
+        - name: install
+          run: npm ci
+        
+        - name: patch version
+          run: npm --no-git-tag-version version patch
+
+        - name: publish npm package
+          run: npm publish --access public
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}    
+            
+        - name: update version in repository
+          run: |
+            git add .
+            git commit -m "GITHUB: update version"
+            git push origin master
+       
