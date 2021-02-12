@@ -2,7 +2,7 @@ name: push-master
 on:
   push:
     branches:
-      - release
+      - master
 
 jobs:
   build:
@@ -21,26 +21,8 @@ jobs:
           path: build/
           retention-days: 1
 
-  # publish-npm:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12
-  #         registry-url: https://registry.npmjs.org/
-  #     - run: npm ci
-  #     - run: |
-  #         git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
-  #         git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
-  #     - run: npm version patch
-  #     - run: npm publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}
-
   generate-release:
-    needs: publish-npm
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -52,7 +34,7 @@ jobs:
         id: publish_tag
         run: |
           git push --follow-tags
-          echo ::set-output name=tag_name::$(npm view ecs-env version)
+          echo ::set-output name=tag_name::$(uuidgen)
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
