@@ -90,7 +90,7 @@ jobs:
           with:
             node-version: 12
             registry-url: https://registry.npmjs.org/
-        - name: Config git
+        - name: config git
           run: |
             git config --global user.name "Github Actions"
             git config --global user.email github@local
@@ -105,7 +105,7 @@ jobs:
           run: npm publish --access public
           env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}    
-            
+
         - name: update version in repository
           run: |
             git add .
