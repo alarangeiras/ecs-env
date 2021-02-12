@@ -110,5 +110,5 @@ jobs:
           run: |
             git add .
             git commit -m "GITHUB: update version"
-            git push origin master
+            git push --force origin master
        
