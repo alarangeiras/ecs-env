@@ -14,12 +14,14 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+          registry-url: https://registry.npmjs.org/
+
       - run: |
           git config --global user.name "Github Actions"
           git config --global user.email github@local
           npm --no-git-tag-version version patch
           npm ci
-          npm publish
+          npm publish --access public
           git add .
           git commit -m "GITHUB: update version"
           git push origin master
