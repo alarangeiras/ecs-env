@@ -18,9 +18,11 @@ jobs:
           git config --global user.name "Github Actions"
           git config --global user.email github@local
           npm --no-git-tag-version version patch
+          npm ci
           npm publish
           git add .
           git commit -m "GITHUB: update version"
+          git push origin master
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}          
       
