@@ -1,6 +1,6 @@
 {
   "name": "ecs-env",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "main": "cli.js",
   "homepage": "https://github.com/alarangeiras/ecs-env",
