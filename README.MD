@@ -8,13 +8,19 @@ ecs-env is a script globally installed to help generate Spring Boot's applicatio
 
 ![release](https://github.com/alarangeiras/ecs-env/workflows/release/badge.svg)
 
-## INSTALL
+## Instalation
+
+You can install ecs-env throught npmjs running the command below: 
 
 > npm i -g ecs-env
 
-## USAGE
+Alternativelly you can download the pre-compiled version in the [release session of github's repository](https://github.com/alarangeiras/ecs-env/releases). You'll find there, versions to all the main platforms (64bit).
 
-> ecs-env SERVICE_NAME {REGION} {FILE_NAME}
+## Help
+
+If you want to get some help then run the command below: 
+
+> ecs-env -h
 
 where:
 * SERVICE_NAME: The service name (task definition) in ECS
