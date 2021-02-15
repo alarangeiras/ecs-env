@@ -5,36 +5,24 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm ci
-      - run: npm run build
-      - name: Temporarily save artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts
-          path: build/
-          retention-days: 1
+      - name: build
+        run: |
+          npm ci
+          npm run build --prod
 
-  generate-release:
-    needs: npm-publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
       - name: publish tag
         id: publish_tag
         run: |
           npm --no-git-tag-version --allow-same-version version $(npm view ecs-env version)
           echo ::set-output name=tag_name::$(npm --no-git-tag-version version patch)
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -45,11 +33,7 @@ jobs:
           release_name: Release ${{ steps.publish_tag.outputs.tag_name }}
           draft: false
           prerelease: false
-      - name: Retrieve artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: artifacts
-          path: build/
+
       - name: Upload Release Asset (Linux)
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1
@@ -60,6 +44,7 @@ jobs:
           asset_path: ./build/ecs-env-linux
           asset_name: ecs-env-linux
           asset_content_type: application/octet-stream
+
       - name: Upload Release Asset (MacOS)
         id: upload-release-asset-macos
         uses: actions/upload-release-asset@v1
@@ -70,6 +55,7 @@ jobs:
           asset_path: ./build/ecs-env-macos
           asset_name: ecs-env-macos
           asset_content_type: application/octet-stream
+
       - name: Upload Release Asset (Windows)
         id: upload-release-asset-windows
         uses: actions/upload-release-asset@v1

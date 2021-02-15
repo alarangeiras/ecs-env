@@ -1,0 +1,1 @@
+const propertiesService = require('../../lib/services/properties-service');

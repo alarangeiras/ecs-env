@@ -32,5 +32,8 @@
     "aws-sdk": "2.797.0",
     "pkg": "4.4.9",
     "rimraf": "3.0.2"
+  },
+  "devDependencies": {
+    "mocha": "8.3.0"
   }
 }
