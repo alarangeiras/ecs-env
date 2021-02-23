@@ -9,9 +9,10 @@
     "url": "https://github.com/alarangeiras/ecs-env"
   },
   "scripts": {
+    "fmt": "prettier --write ./lib ./test",
     "clear": "rimraf build/",
     "start": "node ./cli.js",
-    "test": "mocha",
+    "test": "mocha --recursive",
     "build": "npm run clear && pkg cli.js -t node12-linux-x64,node12-macos-x64,node12-win-x64 -o build/ecs-env"
   },
   "bin": {
@@ -35,6 +36,7 @@
     "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "mocha": "8.3.0"
+    "mocha": "8.3.0",
+    "prettier": "2.2.1"
   }
 }
